@@ -9,9 +9,5 @@ edition = "2021"
 name = "jars"
 path = "src/lib.rs"
 
-[[bin]]
-name = "bin"
-path = "src/bin.rs"
-
 [dependencies]
 zip = "0.6.4"
