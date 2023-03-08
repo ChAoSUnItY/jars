@@ -1,3 +1,6 @@
+//! `jars` is a simple utility library allows users to extract jar files on file system based on given
+//! extraction rules.
+
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{Error, Read};
@@ -135,7 +138,7 @@ pub struct Jar {
 /// # Example
 /// 
 /// ```rs
-/// let jar = jar("sample/rt.jar", JarOptionBuilder::default());
+/// let jar = jar("sample/rt.jar", JarOptionBuilder::default())?;
 /// ```
 pub fn jar<P>(path: P, option: JarOption) -> Result<Jar, Error> where P: AsRef<Path> {
     let mut files = HashMap::new();
@@ -173,7 +176,7 @@ mod tests {
     #[test]
     fn test_rt_jar_folders() {
         let jar = jar("../sample/rt.jar", JarOptionBuilder::builder().target("java/lang").build());
-
+        
         assert!(jar.is_ok());
     }
 }
