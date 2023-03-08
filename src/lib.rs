@@ -39,7 +39,15 @@ impl JarOption {
         if self.extension_targets.is_empty() {
             true
         } else {
-            self.extension_targets.iter().any(|ext| qualified_target_path.ends_with(ext))
+            let extension = qualified_target_path.rsplit_once(".");
+            
+            if let Some((_, extension)) = extension {
+                self.extension_targets.iter().any(|ext| {
+                    extension.ends_with(ext)
+                })
+            } else {
+                false
+            }
         }
     }
 }
