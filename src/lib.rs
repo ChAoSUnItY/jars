@@ -5,6 +5,7 @@ use std::path::Path;
 
 use zip::ZipArchive;
 
+/// An option that indicates the extraction behaviour used in [jar].
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 pub struct JarOption {
     extract_targets: HashSet<String>,
@@ -29,6 +30,7 @@ impl JarOption {
     }
 }
 
+/// A simple option builder for [JarOption] to build in a easy way.
 #[derive(Debug)]
 pub struct JarOptionBuilder {
     extract_targets: HashSet<String>,
@@ -36,10 +38,12 @@ pub struct JarOptionBuilder {
 }
 
 impl JarOptionBuilder {
+    /// Creates a [JarOption] which allows any file extraction by default.
     pub fn default() -> JarOption {
         JarOption::default()
     }
 
+    /// Creates a [JarOptionBuilder] to build up extraction options.
     pub fn builder() -> Self {
         Self {
             extract_targets: HashSet::new(),
@@ -47,35 +51,69 @@ impl JarOptionBuilder {
         }
     }
 
+    /// Keeps `META-INF` folder on extraction.
     pub fn keep_meta_info(mut self) -> Self {
         self.extract_targets.insert("META-INF".to_string());
         self
     }
 
+    /// Filters extraction target with providing target path. Note that [jar] extracts all files when
+    /// there's no extraction target specified.
+    /// 
+    /// # Example
+    /// 
+    /// ```rs
+    /// JarOptionBuilder::builder().target("java/lang").build();
+    /// ```
     pub fn target(mut self, target: &str) -> Self {
         self.extract_targets.insert(target.to_string());
         self
     }
 
-    pub fn targets(mut self, targets: &Vec<String>) -> Self {
+    /// Filters multiple extraction targets with providing target path. Note that [jar] extracts all 
+    /// files when there's no extraction target specified.
+    /// 
+    /// # Example
+    /// 
+    /// ```rs
+    /// JarOptionBuilder::builder().targets(vec!["java/lang"]).build();
+    /// ```
+    pub fn targets(mut self, targets: &Vec<&str>) -> Self {
         for target in targets {
-            self.extract_targets.insert(target.clone());
+            self.extract_targets.insert(target.to_string());
         }
         self
     }
 
+    /// Filters extraction targets with providing file extension. Note that [jar] extracts all 
+    /// files when there's no extraction target specified.
+    ///
+    /// # Example
+    /// 
+    /// ```rs
+    /// JarOptionBuilder::builder().ext("java/lang").build();
+    /// ```
     pub fn ext(mut self, ext: &str) -> Self {
         self.extension_targets.insert(ext.to_string());
         self
     }
 
-    pub fn exts(mut self, exts: &Vec<String>) -> Self {
+    /// Filters multiple extraction targets with providing file extension. Note that [jar] extracts 
+    /// all files when there's no extraction target specified.
+    ///
+    /// # Example
+    ///
+    /// ```rs
+    /// JarOptionBuilder::builder().exts(vec!["java/lang"]).build();
+    /// ```
+    pub fn exts(mut self, exts: &Vec<&str>) -> Self {
         for ext in exts {
-            self.extension_targets.insert(ext.clone());
+            self.extension_targets.insert(ext.to_string());
         }
         self
     }
 
+    /// Finalize current [JarOptionBuilder] and construct a [JarOption] from current builder.
     pub fn build(self) -> JarOption {
         JarOption {
             extract_targets: self.extract_targets,
@@ -84,10 +122,21 @@ impl JarOptionBuilder {
     }
 }
 
+/// Simple [Jar] data representation stores files with a single [HashMap], key of files are full
+/// qualified path while entry of files are read data in vector of u8.
 pub struct Jar {
-    files: HashMap<String, Vec<u8>>,
+    pub files: HashMap<String, Vec<u8>>,
 }
 
+/// Extracts a jar file from given parameter `path`. The extraction behaviour is defined by parameter
+/// `option` which can build from [JarOptionBuilder::default] with all defaulted options, or 
+/// [JarOptionBuilder::builder] with multiple options provided.
+/// 
+/// # Example
+/// 
+/// ```rs
+/// let jar = jar("sample/rt.jar", JarOptionBuilder::default());
+/// ```
 pub fn jar<P>(path: P, option: JarOption) -> Result<Jar, Error> where P: AsRef<Path> {
     let mut files = HashMap::new();
     let mut jar_zip = File::open(path).map(ZipArchive::new)??;
