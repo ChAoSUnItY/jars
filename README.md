@@ -1,4 +1,8 @@
 # jars
+
+[![Crates.io](https://img.shields.io/crates/v/jars)](https://crates.io/crates/jars)
+[![Docs](https://docs.rs/jars/badge.svg)](https://docs.rs/jars/)
+
 `jars` is a simple utility library allows users to extract jar files on file system based on given
 extraction rules.
 
