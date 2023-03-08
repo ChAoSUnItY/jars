@@ -113,7 +113,7 @@ impl JarOptionBuilder {
     /// # Example
     /// 
     /// ```rs
-    /// JarOptionBuilder::builder().ext("java/lang").build();
+    /// JarOptionBuilder::builder().ext("class").build();
     /// ```
     pub fn ext(mut self, ext: &str) -> Self {
         self.extension_targets.insert(ext.to_string());
@@ -126,7 +126,7 @@ impl JarOptionBuilder {
     /// # Example
     ///
     /// ```rs
-    /// JarOptionBuilder::builder().exts(vec!["java/lang"]).build();
+    /// JarOptionBuilder::builder().exts(vec!["class"]).build();
     /// ```
     pub fn exts(mut self, exts: &Vec<&str>) -> Self {
         for ext in exts {
