@@ -1,5 +1,16 @@
 //! `jars` is a simple utility library allows users to extract jar files on file system based on given
 //! extraction rules.
+//! ## Usage
+//! 
+//! ```rs
+//! import jars::{jar, JarOptionBuilder};
+//! 
+//! let jar = jars::jar("sample/rt.jar", JarOptionBuilder::default())?;
+//! 
+//! for (file_path, content) in jar.files {
+//! // ...
+//! }
+//! ```
 
 use std::collections::{HashMap, HashSet};
 use std::fs::File;

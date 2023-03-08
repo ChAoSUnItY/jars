@@ -2,6 +2,12 @@
 name = "jars"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+license-file = "LICENSE"
+repository = "https://github.com/ChAoSUnItY/jars"
+description = "A simple jar extraction library"
+readme = "README.md"
+keywords = ["jar"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
